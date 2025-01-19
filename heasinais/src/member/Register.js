@@ -2,13 +2,17 @@ import React, { useState } from "react";
 import axios from "axios";
 
 const Register = ({ onClose }) => {
-  const [userid, setUserid] = useState(""); // 아이디 상태
+  const SERVER_IP = process.env.REACT_APP_SERVER_IP;
+  
+  const [username, setUserid] = useState(""); // 아이디 상태
   const [password, setPassword] = useState(""); // 비밀번호 상태
   const [confirmPassword, setConfirmPassword] = useState(""); // 비밀번호 확인 상태
   const [error, setError] = useState(""); // 에러 메시지 상태
   const [success, setSuccess] = useState(""); // 성공 메시지 상태
 
+  
   const handleRegister = async (e) => {
+
     e.preventDefault();
     setError(""); // 에러 초기화
     setSuccess(""); // 성공 메시지 초기화
@@ -19,12 +23,13 @@ const Register = ({ onClose }) => {
     }
 
     try {
+      console.log('서버 IP:', SERVER_IP);
+      console.log(process.env);
       // 서버로 회원가입 데이터 전송
-      const response = await axios.post("http://your-server-url/register", {
-        userid,
+      const response = await axios.post(`${SERVER_IP}/members/join`, {
+        username,
         password,
       });
-
       if (response.status === 201) {
         setSuccess("회원가입이 완료되었습니다!");
         setUserid(""); // 입력 필드 초기화
@@ -32,7 +37,11 @@ const Register = ({ onClose }) => {
         setConfirmPassword("");
         // 서버 응답 데이터 처리
         console.log("회원가입 성공:", response.data);
+
       }
+      setSuccess("회원가입이 완료되었습니다!");
+      onClose();
+      
     } catch (err) {
       console.error("회원가입 오류:", err);
       setError("회원가입에 실패했습니다. 다시 시도해주세요.");
@@ -47,7 +56,7 @@ const Register = ({ onClose }) => {
           onClick={onClose}
           className="absolute top-2 right-2 text-gray-600 hover:text-gray-900"
         >
-          ✕
+          ✕ 
         </button>
         <h1 className="text-xl font-semibold text-center text-gray-800 mb-6">
           회원가입
@@ -64,7 +73,7 @@ const Register = ({ onClose }) => {
             <input
               type="text"
               id="username"
-              value={userid}
+              value={username}
               onChange={(e) => setUserid(e.target.value)}
               className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="아이디를 입력하세요"

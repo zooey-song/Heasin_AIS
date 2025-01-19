@@ -4,33 +4,42 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-  const [userid, setUserid] = useState(""); // 아이디 상태
+  const SERVER_IP = process.env.REACT_APP_SERVER_IP;
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [username, setUserid] = useState(""); // 아이디 상태
   const [password, setPassword] = useState(""); // 비밀번호 상태
   const [error, setError] = useState(""); // 에러 메시지 상태
-  const [showRegister, setShowRegister] = useState(false); // 회원가입 모달 상태
   const navigate = useNavigate(); // 페이지 이동을 위한 navigate 초기화
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setError(""); // 에러 초기화
-  
+
     try {
-      const response = await axios.post("http://localhost:4000/login", {
-        userid,
+      const response = await axios.post(`${SERVER_IP}/login`, {
+        username,
         password,
       });
-  
+
       if (response.status === 200) {
         console.log("로그인 성공:", response.data);
-        alert("로그인 성공!");
-        navigate("/component/homemap"); // homemap 경로로 이동
+        //alert("로그인 성공!");
+        navigate("/homemap"); // homemap 경로로 이동
       }
     } catch (err) {
       console.error("로그인 실패:", err);
       setError("로그인에 실패했습니다. 아이디와 비밀번호를 확인해주세요.");
     }
   };
-  
+ 
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
 
   return (
     <div className="relative h-screen bg-gray-900">
@@ -61,7 +70,7 @@ const Login = () => {
               <input
                 type="text"
                 id="username"
-                value={userid}
+                value={username}
                 onChange={(e) => setUserid(e.target.value)}
                 className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="아이디를 입력하세요"
@@ -94,19 +103,15 @@ const Login = () => {
           </form>
           {/* 회원가입 버튼 */}
           <div className="mt-4 text-center">
-            <button
-              onClick={() => setShowRegister(true)} // 회원가입 모달 열기
-              className="text-blue-500 hover:underline text-sm"
-            >
-              회원가입
-            </button>
+      {/* 회원가입 모달 */}
+          <div>
+            <button onClick={openModal}>회원가입</button>
+            {isModalOpen && <Register onClose={closeModal} />}
+          </div>
           </div>
         </div>
       </div>
-      {/* 회원가입 모달 */}
-      {showRegister && (
-        <Register onClose={() => setShowRegister(false)} /> // 닫기 기능 전달
-      )}
+
     </div>
   );
 };
