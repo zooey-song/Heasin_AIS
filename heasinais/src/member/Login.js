@@ -1,17 +1,36 @@
 import React, { useState } from "react";
 import Register from "./Register"; // 회원가입 모달 컴포넌트
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [userid, setUserid] = useState(""); // 아이디 상태
   const [password, setPassword] = useState(""); // 비밀번호 상태
+  const [error, setError] = useState(""); // 에러 메시지 상태
   const [showRegister, setShowRegister] = useState(false); // 회원가입 모달 상태
+  const navigate = useNavigate(); // 페이지 이동을 위한 navigate 초기화
 
-  const handleLogin = (e) => {
-    e.preventDefault(); // 폼 제출 시 새로고침 방지
-    console.log("아이디:", userid);
-    console.log("비밀번호:", password);
-    alert("로그인 버튼 클릭됨!");
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setError(""); // 에러 초기화
+  
+    try {
+      const response = await axios.post("http://localhost:4000/login", {
+        userid,
+        password,
+      });
+  
+      if (response.status === 200) {
+        console.log("로그인 성공:", response.data);
+        alert("로그인 성공!");
+        navigate("/component/homemap"); // homemap 경로로 이동
+      }
+    } catch (err) {
+      console.error("로그인 실패:", err);
+      setError("로그인에 실패했습니다. 아이디와 비밀번호를 확인해주세요.");
+    }
   };
+  
 
   return (
     <div className="relative h-screen bg-gray-900">
