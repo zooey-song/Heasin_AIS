@@ -1,45 +1,52 @@
-import React from "react";
-
-const SideMenu = ({ isOpen, toggleMenu }) => {
+import React, { useState } from 'react';
+import 'leaflet/dist/leaflet.css';
+const sideMenu = ({ isOpen, onSelect, toggleMenu }) => {
   return (
     <>
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-40"
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100vw',
+            height: '100vh',
+            background: 'rgba(0, 0, 0, 0.5)',
+            zIndex: 50
+          }}
           onClick={toggleMenu}
         ></div>
       )}
-      <button
-        className="fixed top-4 right-4 bg-gray-800 text-white p-2 rounded z-50"
-        onClick={toggleMenu}
-      >
-        {isOpen ? "✖" : "☰"}
-      </button>
       <div
-        className={`fixed top-0 right-0 h-full w-64 bg-gray-900 text-white transform ${
-          isOpen ? "translate-x-0" : "translate-x-full"
-        } transition-transform duration-300 ease-in-out z-50`}
+        style={{
+          position: 'fixed',
+          top: 0,
+          right: isOpen ? 0 : '-250px',
+          height: '100%',
+          width: '250px',
+          background: '#333',
+          color: 'white',
+          transition: 'right 0.3s ease-in-out',
+          zIndex: 60,
+          padding: '16px'
+        }}
       >
-        <ul className="mt-16 space-y-4 p-4">
-          <li className="border-b border-gray-700 pb-2">
-            <a href="#" className="hover:underline">
-              Home
-            </a>
+        <ul>
+          <li style={{ margin: '10px 0' }}>
+            <button
+              style={{ color: 'white', background: 'none', border: 'none', cursor: 'pointer' }}
+              onClick={() => onSelect('/homemap')}
+            >
+              Home Map
+            </button>
           </li>
-          <li className="border-b border-gray-700 pb-2">
-            <a href="#" className="hover:underline">
-              About
-            </a>
-          </li>
-          <li className="border-b border-gray-700 pb-2">
-            <a href="#" className="hover:underline">
-              Services
-            </a>
-          </li>
-          <li className="border-b border-gray-700 pb-2">
-            <a href="#" className="hover:underline">
-              Contact
-            </a>
+          <li style={{ margin: '10px 0' }}>
+            <button
+              style={{ color: 'white', background: 'none', border: 'none', cursor: 'pointer' }}
+              onClick={() => onSelect('/homemap')}
+            >
+              Home Map
+            </button>
           </li>
         </ul>
       </div>
@@ -47,4 +54,4 @@ const SideMenu = ({ isOpen, toggleMenu }) => {
   );
 };
 
-export default SideMenu;
+export default sideMenu;
