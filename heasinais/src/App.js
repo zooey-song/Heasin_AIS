@@ -2,7 +2,7 @@
 import './App.css';
 import './index.css';
 import Login from './member/Login'
-import HomeMap from './items/homemap'
+import HomeMap from './page/homemap'
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
